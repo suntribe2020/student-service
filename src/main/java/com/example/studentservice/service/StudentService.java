@@ -5,7 +5,6 @@ import com.example.studentservice.VO.ResponseTemplateVO;
 import com.example.studentservice.entity.Student;
 import com.example.studentservice.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -33,23 +32,35 @@ public class StudentService {
     private static final String COURSE_SERVICE_ENDPOINT = "http://COURSE-SERVICE/course/findById/";
 
     public Student save(Student student) {
-        List<String> courseIdList = new ArrayList<>();
-        courseIdList.add(student.getCourseId());
-        String joined = StringUtils.join(courseIdList,",");
-        student.setCourseId(joined);
         return studentRepository.save(student);
     }
 
     public Student updateStudent(Student student) {
         Student updateStudent = studentRepository.findByStudentId(student.getStudentId());
-        updateStudent.setSsn(student.getSsn());
-        updateStudent.setFirstName(student.getFirstName());
-        updateStudent.setLastName(student.getLastName());
-        updateStudent.setAddress(student.getAddress());
-        updateStudent.setAreaCode(student.getAreaCode());
-        updateStudent.setCity(student.getCity());
-        updateStudent.setEmail(student.getEmail());
-        updateStudent.setCourseId(student.getCourseId());
+        if (student.isSsn()) {
+            updateStudent.setSsn(student.getSsn());
+        }
+        if (student.isFirstName()) {
+            updateStudent.setFirstName(student.getFirstName());
+        }
+        if (student.isLastName()) {
+            updateStudent.setLastName(student.getLastName());
+        }
+        if (student.isAddress()) {
+            updateStudent.setAddress(student.getAddress());
+        }
+        if (student.isAreaCode()) {
+            updateStudent.setAreaCode(student.getAreaCode());
+        }
+        if (student.isCity()) {
+            updateStudent.setCity(student.getCity());
+        }
+        if (student.isEmail()) {
+            updateStudent.setEmail(student.getEmail());
+        }
+        if (student.isCourseId()) {
+            updateStudent.setCourseId(student.getCourseId());
+        }
         studentRepository.save(updateStudent);
 
         return updateStudent;

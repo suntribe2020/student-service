@@ -31,42 +31,100 @@ class StudentServiceTest {
     @InjectMocks
     private StudentService studentService;
 
+    private static final Long ID = 1L;
+
     @Test
     void shouldSaveStudentSuccessfully() {
-        Student student = getTestStudent();
+        Student testStudent = getTestStudent();
 
-        when(studentRepository.save(student)).thenReturn(student);
-        assertEquals(student, studentService.save(student));
+        when(studentRepository.save(testStudent)).thenReturn(testStudent);
+        assertEquals(testStudent, studentService.save(testStudent));
+    }
+
+    @Test
+    void shouldUpdateStudentSuccessfully() {
+        Student testStudent = getTestStudent();
+
+        when(studentRepository.findByStudentId(ID)).thenReturn(testStudent);
+        when(studentService.findAll()).thenReturn(List.of(testStudent));
+
+        Student updatedStudent = new Student();
+        updatedStudent.setStudentId(ID);
+        updatedStudent.setSsn("updatedSsn");
+        updatedStudent.setFirstName("updatedFirstName");
+        updatedStudent.setLastName("updatedLastname");
+        updatedStudent.setAddress("updatedAddress");
+        updatedStudent.setAreaCode("updatedAreaCode");
+        updatedStudent.setCity("updatedCity");
+        updatedStudent.setEmail("updatedEmail");
+        updatedStudent.setCourseId("updatedCourseId");
+
+        studentService.updateStudent(updatedStudent);
+
+        List<Student> actual = studentService.findAll();
+        Student actualStudent = actual.get(0);
+
+        assertEquals(ID, actualStudent.getStudentId());
+        assertEquals(testStudent.getSsn(), actualStudent.getSsn());
+        assertEquals(testStudent.getFirstName(), actualStudent.getFirstName());
+        assertEquals(testStudent.getLastName(), actualStudent.getLastName());
+        assertEquals(testStudent.getAddress(), actualStudent.getAddress());
+        assertEquals(testStudent.getAreaCode(), actualStudent.getAreaCode());
+        assertEquals(testStudent.getCity(), actualStudent.getCity());
+        assertEquals(testStudent.getEmail(), actualStudent.getEmail());
+        assertEquals(testStudent.getCourseId(), actualStudent.getCourseId());
+    }
+
+    @Test
+    void shouldFindStudentByStudentId() {
+        Student testStudent = getTestStudent();
+
+        when(studentRepository.findByStudentId(ID)).thenReturn(testStudent);
+        Student actualStudent = studentService.findByStudentId(ID);
+
+        verify(studentRepository).findByStudentId(ID);
+        assertEquals(studentRepository.findByStudentId(ID), actualStudent);
     }
 
     @Test
     void shouldGetAllStudentsSuccessfully() {
-        List<Student> testStudents = getTestStudents();
+        List<Student> allTestStudents = new ArrayList<>();
+        allTestStudents.add(new Student(1L,"700327-3882","Tyrion","Lannister",
+                "Casterly Rock","12879", "Västeros", "halfman@mail.com","2"));
 
-        when(studentRepository.findAll()).thenReturn(testStudents);
+        allTestStudents.add(new Student(2L,"750812-4739","Daenerys","Targaryen",
+                "Thrones 3","32783", "Västeros", "khaleesi@mail.com","1"));
+
+        when(studentRepository.findAll()).thenReturn(allTestStudents);
         assertEquals(2, studentService.findAll().size());
     }
 
     @Test
     void shouldDeleteStudentByStudentId() {
         Student testStudent = getTestStudent();
-        studentService.deleteByStudentId(testStudent.getStudentId());
 
+        when(studentRepository.save(testStudent)).thenReturn(testStudent);
+
+        Student actualStudent = studentService.save(testStudent);
+        assertEquals(testStudent.getStudentId(), actualStudent.getStudentId());
+
+        studentService.deleteByStudentId(ID);
         verify(studentRepository,times(1)).deleteByStudentId(testStudent.getStudentId());
     }
 
     private Student getTestStudent() {
-        return new Student(1L,"ssn","firstName","lastName","address",
-                "areaCode", "city", "email","courseId");
-    }
+        Student student = new Student();
+        student.setStudentId(ID);
+        student.setSsn("ssn");
+        student.setFirstName("firstName");
+        student.setLastName("lastName");
+        student.setAddress("address");
+        student.setAreaCode("areaCode");
+        student.setCity("city");
+        student.setEmail("email");
+        student.setCourseId("courseId");
 
-    private List<Student> getTestStudents() {
-        List<Student> allStudents = new ArrayList<>();
-        allStudents.add(new Student(1L,"ssn","firstName","lastName","address",
-                "areaCode", "city", "email","courseId"));
-        allStudents.add(new Student(2L,"ssn2","firstName2","lastName2","address2",
-                "areaCode2", "city2", "email2","courseId2"));
-        return allStudents;
+        return student;
     }
 }
 

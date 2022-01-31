@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * Created by Katri Vidén
@@ -34,4 +36,28 @@ public class Student {
     private String email;
     private String courseId;
 
+    public boolean isSsn() {
+        return ssn != null;
+    }
+    public boolean isFirstName() {
+        return firstName != null;
+    }
+    public boolean isLastName() {
+        return lastName != null;
+    }
+    public boolean isAddress() {
+        return address != null;
+    }
+    public boolean isAreaCode() {
+        return areaCode != null;
+    }
+    public boolean isCity() {
+        return city != null;
+    }
+    public boolean isEmail() {
+        return email != null;
+    }
+    public boolean isCourseId()  {
+        return courseId != null;
+    }
 }

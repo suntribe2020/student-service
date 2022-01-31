@@ -1,14 +1,11 @@
 package com.example.studentservice.controller;
 
-import com.example.studentservice.VO.Course;
 import com.example.studentservice.VO.ResponseTemplateVO;
 import com.example.studentservice.entity.Student;
 import com.example.studentservice.service.StudentService;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,10 +27,6 @@ public class StudentController {
     public Student saveStudent(@RequestBody Student student) {
         return studentService.save(student);
     }
-
-    //add course to student
-
-    //delete course from student
 
     @PatchMapping("/updateStudent")
     public Student updateStudent(@RequestBody Student student) {
